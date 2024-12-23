@@ -40,7 +40,7 @@ void ParticleManager::render(sf::RenderWindow& renderer)
     for (Particle& particle : particles)
     {
         sf::CircleShape shape(PARTICLE_RADIUS);
-        shape.setPosition(particle.currentPostion);
+        shape.setPosition(particle.currentPosition);
         shape.setFillColor(particle.color);
 
         renderer.draw(shape);
@@ -63,7 +63,7 @@ void ParticleManager::checkCollision(float deltaTime)
 
 bool ParticleManager::isColliding(const Particle& p1, const Particle& p2)
 {
-    sf::Vector2f delta = p1.currentPostion - p2.currentPostion;
+    sf::Vector2f delta = p1.currentPosition - p2.currentPosition;
     float distanceSquared = delta.x * delta.x + delta.y * delta.y;
     float radiiSum = PARTICLE_RADIUS * 2; 
     return distanceSquared < radiiSum * radiiSum;
@@ -71,7 +71,7 @@ bool ParticleManager::isColliding(const Particle& p1, const Particle& p2)
 
 void ParticleManager::resolveCollision(Particle& p1, Particle& p2)
 {
-    sf::Vector2f delta = p1.currentPostion - p2.currentPostion;
+    sf::Vector2f delta = p1.currentPosition - p2.currentPosition;
     float distanceSquared = delta.x * delta.x + delta.y * delta.y;
 
     float distance = std::sqrt(distanceSquared);
@@ -88,6 +88,6 @@ void ParticleManager::resolveCollision(Particle& p1, Particle& p2)
     p2.acceleration -= force / PARTICLE_MASS;
 
     // Adjust position by half of overlap in the axis of the direction vector
-    p1.currentPostion += (direction * overlap * 0.5f);
-    p2.currentPostion -= (direction * overlap * 0.5f);
+    p1.currentPosition += (direction * overlap * 0.5f);
+    p2.currentPosition -= (direction * overlap * 0.5f);
 }

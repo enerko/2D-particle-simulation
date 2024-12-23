@@ -5,8 +5,8 @@
 
 struct Particle
 {
-	sf::Vector2f currentPostion = {0.0f, 0.0f};
-	sf::Vector2f previousPostion = {0.0f, 0.0f};
+	sf::Vector2f currentPosition = {0.0f, 0.0f};
+	sf::Vector2f previousPosition = {0.0f, 0.0f};
 	sf::Vector2f acceleration = { 0.0f, 0.0f };
 	sf::Color color;
 
@@ -15,11 +15,11 @@ struct Particle
 	void updateParticle(float deltaTime)
 	{
 		// Update position using Verlet Integration
-		sf::Vector2f newPosition = currentPostion + (currentPostion - previousPostion)
+		sf::Vector2f newPosition = currentPosition + (currentPosition - previousPosition)
 			+ acceleration * (deltaTime * deltaTime);		
 
-		previousPostion = currentPostion;
-		currentPostion = newPosition;
+		previousPosition = currentPosition;
+		currentPosition = newPosition;
 		acceleration = sf::Vector2f{ 0.0f, 0.0f };
 
 		// Limit position to within the screen
@@ -28,8 +28,8 @@ struct Particle
 
 	void setPosition(sf::Vector2f pos)
 	{
-		currentPostion = pos;
-		previousPostion = pos;
+		currentPosition = pos;
+		previousPosition = pos;
 		acceleration = sf::Vector2f{ 0.0f, 0.0f };
 	}
 
@@ -40,33 +40,33 @@ struct Particle
 		// Bounce by reversing velocity (currentPosition - previousPosition) multiplied by damping
 		
 		// Right wall
-		if (currentPostion.x > SCREEN_WIDTH - SCREEN_MARGIN)
+		if (currentPosition.x > SCREEN_WIDTH - SCREEN_MARGIN)
 		{
-			currentPostion.x = SCREEN_WIDTH - SCREEN_MARGIN;
+			currentPosition.x = SCREEN_WIDTH - SCREEN_MARGIN;
 
 			// Set previous position to be flipped against the wall as the axis, i.e. pretend as if it came from the left
-			previousPostion.x = currentPostion.x + (currentPostion.x - previousPostion.x) * dampingCoeff;
+			previousPosition.x = currentPosition.x + (currentPosition.x - previousPosition.x) * dampingCoeff;
 		}
 
 		// Left wall
-		else if (currentPostion.x < SCREEN_MARGIN)
+		else if (currentPosition.x < SCREEN_MARGIN)
 		{
-			currentPostion.x = SCREEN_MARGIN;
-			previousPostion.x = currentPostion.x + (currentPostion.x - previousPostion.x) * dampingCoeff;
+			currentPosition.x = SCREEN_MARGIN;
+			previousPosition.x = currentPosition.x + (currentPosition.x - previousPosition.x) * dampingCoeff;
 		}
 
 		// Bottom wall
-		if (currentPostion.y > SCREEN_HEIGHT - SCREEN_MARGIN)
+		if (currentPosition.y > SCREEN_HEIGHT - SCREEN_MARGIN)
 		{
-			currentPostion.y = SCREEN_HEIGHT - SCREEN_MARGIN;
-			previousPostion.y = currentPostion.y + (currentPostion.y - previousPostion.y) * dampingCoeff;
+			currentPosition.y = SCREEN_HEIGHT - SCREEN_MARGIN;
+			previousPosition.y = currentPosition.y + (currentPosition.y - previousPosition.y) * dampingCoeff;
 		}
 
 		// Top wall
-		else if (currentPostion.y < SCREEN_MARGIN)
+		else if (currentPosition.y < SCREEN_MARGIN)
 		{
-			currentPostion.y = SCREEN_MARGIN;
-			previousPostion.y = currentPostion.y + (currentPostion.y - previousPostion.y) * dampingCoeff;
+			currentPosition.y = SCREEN_MARGIN;
+			previousPosition.y = currentPosition.y + (currentPosition.y - previousPosition.y) * dampingCoeff;
 		}
 
 		// Reset acceleration
