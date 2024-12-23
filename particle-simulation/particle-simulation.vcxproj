@@ -137,6 +137,7 @@
     <ClCompile Include="particle_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="constants.hpp" />
     <ClInclude Include="particle.hpp" />
     <ClInclude Include="particle_manager.hpp" />
   </ItemGroup>

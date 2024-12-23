@@ -1,9 +1,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "particle_manager.hpp"
-
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 600;
+#include "constants.hpp"
 
 int main()
 {

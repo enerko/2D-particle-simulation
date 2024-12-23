@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "particle.hpp"
+#include "constants.hpp"
 
 class ParticleManager
 {

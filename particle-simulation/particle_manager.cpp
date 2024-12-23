@@ -33,7 +33,7 @@ void ParticleManager::render(sf::RenderWindow& renderer)
 {
     for (Particle& particle : particles)
     {
-        sf::CircleShape shape(5.0f);
+        sf::CircleShape shape(PARTICLE_RADIUS);
         shape.setPosition(particle.currentPostion);
         shape.setFillColor(sf::Color::White);
 
