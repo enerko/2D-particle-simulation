@@ -17,7 +17,7 @@ public:
 
 private:
 	std::vector<Particle> particles;
-	sf::Vector2f gravity = { 0.0f, 20.0f };
+	const sf::Vector2f gravity = { 0.0f, 30.0f };
 
 	bool isColliding(const Particle& p1, const Particle& p2);
 	void resolveCollision(Particle& p1, Particle& p2);

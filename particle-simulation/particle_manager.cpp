@@ -80,7 +80,14 @@ void ParticleManager::resolveCollision(Particle& p1, Particle& p2)
     // Get the normalized direction vector from p2 to p1
     sf::Vector2f direction = delta / distance;
 
+    // Apply collision forces
+    const float k = 80.0f; // Spring constant for Hooke's Law Force = -k x distance
+    sf::Vector2f force = k * overlap * direction;
+
+    p1.acceleration += force / PARTICLE_MASS; // Force = mass x acceleration
+    p2.acceleration -= force / PARTICLE_MASS;
+
     // Adjust position by half of overlap in the axis of the direction vector
-    p1.setPosition(p1.currentPostion + (direction * overlap * 0.5f));
-    p2.setPosition(p2.currentPostion - (direction * overlap * 0.5f));
+    p1.currentPostion += (direction * overlap * 0.5f);
+    p2.currentPostion -= (direction * overlap * 0.5f);
 }
