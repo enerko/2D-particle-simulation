@@ -8,6 +8,7 @@ struct Particle
 	sf::Vector2f currentPostion = {0.0f, 0.0f};
 	sf::Vector2f previousPostion = {0.0f, 0.0f};
 	sf::Vector2f acceleration = { 0.0f, 0.0f };
+	sf::Color color;
 
 	Particle() = default;
 
