@@ -10,10 +10,12 @@ public:
 	ParticleManager();
 	~ParticleManager();
 
-	void spawnParticles(sf::Vector2f position);
+	void spawnParticle(sf::Vector2f position, sf::Vector2f velocity);
 	void updateParticles(float deltaTime);
 	void render(sf::RenderWindow& renderer);
 	void checkCollision(float deltaTime);
+
+	int getNumParticles() { return particles.size();  }
 
 private:
 	std::vector<Particle> particles;

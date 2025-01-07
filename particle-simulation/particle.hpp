@@ -35,9 +35,14 @@ struct Particle
 		acceleration = sf::Vector2f{ 0.0f, 0.0f };
 	}
 
+	void setVelocity(sf::Vector2f newVelocity)
+	{
+		velocity = newVelocity;
+	}
+
 	void checkBoundaries(float deltaTime)
 	{
-		float dampingCoeff = 0.9f; // To reduce bouncing over time
+		float dampingCoeff = 0.5f; // To reduce bouncing over time
 
 		// Bounce by reversing velocity
 		

@@ -11,10 +11,11 @@ ParticleManager::~ParticleManager()
 
 }
 
-void ParticleManager::spawnParticles(sf::Vector2f position)
+void ParticleManager::spawnParticle(sf::Vector2f position, sf::Vector2f velocity)
 {
     Particle newParticle;
     newParticle.setPosition(position);
+    newParticle.setVelocity(velocity);
 
     // Assign a random color
     newParticle.color = sf::Color(rand() % 256, rand() % 256, rand() % 256);
