@@ -7,8 +7,6 @@
 #include <direct.h> // _getcwd
 #define GetCurrentDir _getcwd
 
-
-
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "2D Particle Simulation");
@@ -39,7 +37,7 @@ int main()
     {
         float deltaTime = clock.restart().asSeconds();
 
-        if (particleManager.getNumParticles() < 1000) particleManager.spawnParticle(sf::Vector2f(50, 50), sf::Vector2f(1, 1));
+        if (particleManager.getNumParticles() < MAX_PARTICLE_COUNT) particleManager.spawnParticle(sf::Vector2f(50, 50), sf::Vector2f(1, 1));
 
         sf::Event event;
         while (window.pollEvent(event))
@@ -47,6 +45,14 @@ int main()
             if (event.type == sf::Event::Closed)
             {
                 window.close();
+            }
+
+            // Mouse click event
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                // Limit the mouse position to within the screen
+                sf::Vector2 mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+                particleManager.createForce(mousePosition, 500.0f, 100.0f, 1000.0f); // Create a shock wave
             }
         }
 
@@ -58,6 +64,7 @@ int main()
 
         // Update particles
         particleManager.updateParticles(deltaTime);
+        particleManager.updateForces(deltaTime);
 
         // Render text and particles
         window.clear();

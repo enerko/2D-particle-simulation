@@ -92,3 +92,42 @@ void ParticleManager::resolveCollision(Particle& p1, Particle& p2)
     p1.currentPosition += (direction * overlap * 0.5f);
     p2.currentPosition -= (direction * overlap * 0.5f);
 }
+
+void ParticleManager::createForce(sf::Vector2f forcePosition, float initialStrength, float falloffDistance, float decayRate)
+{
+    activeForces.push_back(ForceEffect{ forcePosition, initialStrength, falloffDistance, decayRate });
+}
+
+void ParticleManager::updateForces(float deltaTime)
+{
+    // Iterate through active forces and apply them
+    for (auto it = activeForces.begin(); it != activeForces.end();)
+    {
+        const auto& force = *it;
+
+        // Apply force to all particles
+        for (auto& particle : particles)
+        {
+            sf::Vector2f direction = particle.currentPosition - force.position;
+            float distance = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+
+            if (distance <= force.falloffDistance)
+            {
+                // Calculate force magnitude based on proximity
+                float strength = force.strength * (1.0f - (distance / force.falloffDistance));
+                sf::Vector2f scaledForce = (direction / distance) * strength;
+
+                particle.applyForce(scaledForce);
+            }
+        }
+
+        // Decay the force strength
+        it->strength -= it->decayRate * deltaTime;
+
+        // Remove forces that have decayed to zero or less
+        if (it->strength <= 0.0f)
+            it = activeForces.erase(it);
+        else
+            ++it;
+    }
+}

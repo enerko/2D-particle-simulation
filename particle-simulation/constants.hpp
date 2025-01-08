@@ -6,3 +6,5 @@ const int SCREEN_HEIGHT = 600;
 const int PARTICLE_RADIUS = 5;
 const int SCREEN_MARGIN = 10; // Double particle radius
 const float PARTICLE_MASS = 1.0f;
+
+const int MAX_PARTICLE_COUNT = 500;
