@@ -134,13 +134,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="grid_cell.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="particle_manager.cpp" />
+    <ClCompile Include="spatial_grid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.hpp" />
+    <ClInclude Include="grid_cell.hpp" />
+    <ClInclude Include="pair_hash.hpp" />
     <ClInclude Include="particle.hpp" />
     <ClInclude Include="particle_manager.hpp" />
+    <ClInclude Include="spatial_grid.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="Arial.ttf" />

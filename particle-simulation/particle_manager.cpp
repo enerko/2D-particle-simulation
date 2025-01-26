@@ -1,14 +1,22 @@
 #include "particle_manager.hpp"
 #include "particle.hpp"
+#include "spatial_grid.hpp"
+
+#include <iostream>
 
 ParticleManager::ParticleManager()
 {
-
+    
 }
 
 ParticleManager::~ParticleManager()
 {
 
+}
+
+void ParticleManager::initialize()
+{
+    spatialGrid.initialize();
 }
 
 void ParticleManager::spawnParticle(sf::Vector2f position, sf::Vector2f velocity)
@@ -33,7 +41,7 @@ void ParticleManager::updateParticles(float deltaTime)
     }
 
     // Check for collisions
-    checkCollision(deltaTime);
+    checkCollisionSpatial(deltaTime);
 }
 
 void ParticleManager::render(sf::RenderWindow& renderer)
@@ -50,9 +58,9 @@ void ParticleManager::render(sf::RenderWindow& renderer)
 
 void ParticleManager::checkCollision(float deltaTime)
 {
-    for (size_t i = 0; i < particles.size(); i++)
+    for (int i = 0; i < particles.size(); ++i)
     {
-        for (size_t j = i + 1; j < particles.size(); j++)
+        for (int j = i+1; j < particles.size(); ++j)
         {
             if (isColliding(particles[i], particles[j]))
             {
@@ -62,12 +70,26 @@ void ParticleManager::checkCollision(float deltaTime)
     }
 }
 
+void ParticleManager::checkCollisionSpatial(float deltaTime)
+{
+    // Check collision using spatial partitioning
+    spatialGrid.clearGrid();
+    for (auto& particle : particles)
+    {
+        spatialGrid.addParticleToGrid(&particle);
+    }
+
+    for (int i = 0; i < spatialGrid.cells.size(); ++i)
+    {
+        processCell(spatialGrid.cells[i], i);
+    }
+}
+
 bool ParticleManager::isColliding(const Particle& p1, const Particle& p2)
 {
     sf::Vector2f delta = p1.currentPosition - p2.currentPosition;
     float distanceSquared = delta.x * delta.x + delta.y * delta.y;
-    float radiiSum = PARTICLE_RADIUS * 2; 
-    return distanceSquared < radiiSum * radiiSum;
+    return distanceSquared < PARTICLE_DIAMETER * PARTICLE_DIAMETER;
 }
 
 void ParticleManager::resolveCollision(Particle& p1, Particle& p2)
@@ -79,7 +101,17 @@ void ParticleManager::resolveCollision(Particle& p1, Particle& p2)
     float overlap = 2 * PARTICLE_RADIUS - distance;
 
     // Get the normalized direction vector from p2 to p1
-    sf::Vector2f direction = delta / distance;
+    sf::Vector2f direction;
+    
+    if (distance < EPSILON)
+    {
+        // Use a fallback normalized direction when particles completely overlap
+        direction = sf::Vector2f(1.0f, 0.0f); // Arbitrary normalized vector
+    }
+    else
+    {
+        direction = delta / distance;
+    }
 
     // Apply collision forces
     const float k = 80.0f; // Spring constant for Hooke's Law Force = -k x distance
@@ -129,5 +161,43 @@ void ParticleManager::updateForces(float deltaTime)
             it = activeForces.erase(it);
         else
             ++it;
+    }
+}
+
+void ParticleManager::processCell(GridCell& cell, int index)
+{
+    for (int i = 0; i < cell.particles.size(); ++i)
+    {
+        Particle* p = cell.particles[i];
+
+        for (int dx = -1; dx <= 1; ++dx)
+        {
+            for (int dy = -1; dy <= 1; ++dy)
+            {
+                int neighborCellIndex = index + (dx * SCREEN_WIDTH) + dy;
+                if (neighborCellIndex > -1 && neighborCellIndex < cell.particles.size())
+                {
+                    GridCell& neighborCell = spatialGrid.cells[neighborCellIndex];
+                    if (!neighborCell.particles[0])
+                    {
+                        checkCellCollision(*p, spatialGrid.cells[neighborCellIndex]);
+                    }
+                    
+                }
+            }
+        }
+    }
+}
+
+void ParticleManager::checkCellCollision(Particle& p1, GridCell& cell)
+{
+    for (int i = 0; i < cell.particles.size(); ++i)
+    {
+        Particle* p2 = cell.particles[i];
+        if (p1 == *p2) return;
+        if (isColliding(p1, *p2))
+        {
+            resolveCollision(p1, *p2);
+        }
     }
 }

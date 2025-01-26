@@ -11,6 +11,7 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "2D Particle Simulation");
     ParticleManager particleManager;
+    particleManager.initialize();
 
     sf::Clock clock;
 

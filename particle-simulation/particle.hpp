@@ -1,7 +1,10 @@
 #pragma once
 
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics.hpp>
 #include "constants.hpp"
+
+#include <iostream>
 
 struct Particle
 {
@@ -13,11 +16,21 @@ struct Particle
 
 	Particle() = default;
 
+	// Define equality operator
+	bool operator==(const Particle& other) const 
+	{
+		return this == &other; // Compare memory addresses (pointer equality)
+	}
+
 	void updateParticle(float deltaTime)
 	{
 		// Update position using Verlet Integration
 		sf::Vector2f newPosition = currentPosition + velocity
 			+ acceleration * (deltaTime * deltaTime);		
+
+		
+
+		
 
 		previousPosition = currentPosition;
 		currentPosition = newPosition;
