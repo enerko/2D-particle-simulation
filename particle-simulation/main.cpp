@@ -7,6 +7,8 @@
 #include <direct.h> // _getcwd
 #define GetCurrentDir _getcwd
 
+#include <GL/glew.h>
+
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "2D Particle Simulation");
